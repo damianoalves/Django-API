@@ -3,7 +3,7 @@ from allauth.account.utils import complete_signup
 from rest_auth.registration.views import RegisterView
 
 
-class RegisterView(RegisterView):
+class CustomRegisterView(RegisterView):
 
     def perform_create(self, serializer):
         user = serializer.save(self.request)

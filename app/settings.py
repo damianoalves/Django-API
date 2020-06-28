@@ -1,16 +1,18 @@
 # -*- coding: utf-8 -*-
 import os
 from os import environ as env
+from app.logs import logging
 
+DEBUG = not env.get('DEBUG') == 'True'
+DJANGO_WEB_HOST = env.get('DJANGO_WEB_HOST', 'localhost')
+ALLOWED_HOSTS = [DJANGO_WEB_HOST, 'localhost', '.herokuapp.com', '127.0.0.1']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = '%h@e@itau5+7ml6kuuupgg^j%h+&8*04vu-r90ey17foxn-icd'
+SECRET_KEY = env.get('DJANGO_SECRET_KEY')
 SITE_ID = 1
-DEBUG = True
 
-ALLOWED_HOSTS = []
+# INSTALLED APPLICATIONS
 
-# Application definition
-INSTALLED_APPS = [
+DEFAULT_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -18,6 +20,10 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+)
+
+THIRD_PARTY_APPS = (
+    'django_extensions',
 
     'rest_framework',
     'oauth2_provider',
@@ -31,13 +37,17 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.facebook',
-    # 'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.google',
+)
 
-    'access'
+LOCAL_APPS = (
+    'access',
+    'core'
+)
 
-]
+INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+# MIDDLEWARES
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -89,6 +99,13 @@ DATABASES = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'oauth2_provider.backends.OAuth2Backend',
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+    'guardian.backends.ObjectPermissionBackend'
+)
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -104,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
+# INTERNATIONALIZATION
 DATE_FORMAT = 'd/m/Y'
 DATETIME_FORMAT = 'd/m/Y - H:i:s'
 LANGUAGE_CODE = 'en-us'
@@ -113,11 +130,13 @@ TIME_ZONE = 'America/Araguaina'
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+# STATIC
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# Email
+# EMAIL
 SERVER_EMAIL = 'Damiano Alves <damiano.alves@gmail.com>'
 DEFAULT_FROM_EMAIL = env.get('DEFAULT_FROM_EMAIL', SERVER_EMAIL)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -127,6 +146,9 @@ EMAIL_HOST = env.get('EMAIL_HOST')
 EMAIL_PORT = env.get('EMAIL_PORT')
 EMAIL_HOST_USER = env.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env.get('EMAIL_HOST_PASSWORD')
+
+# LOGGING
+LOGGING = logging
 
 # REST FRAMEWORK
 REST_FRAMEWORK = {
@@ -147,6 +169,7 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_RENDERER_CLASSES': (
         'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
     ),
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
@@ -209,16 +232,10 @@ SOCIALACCOUNT_PROVIDERS = {
 OLD_PASSWORD_FIELD_ENABLED = True
 LOGOUT_ON_PASSWORD_CHANGE = False
 
-
-AUTHENTICATION_BACKENDS = (
-    'oauth2_provider.backends.OAuth2Backend',
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-    'guardian.backends.ObjectPermissionBackend'
-)
-
+# OAUTH2
 OAUTH2_PROVIDER = {
-    'SCOPES': {'read': 'Read scope', 'write': 'Write scope', 'groups': 'Access to your groups'}
+    'ACCESS_TOKEN_EXPIRE_SECONDS': 3600,
+    'SCOPES': {'read': 'Read scope', 'write': 'Write scope'}
 }
 
 # GUARDIAN

@@ -3,6 +3,8 @@ from oauth2_provider import views
 
 urlpatterns = [
 
+    path("authorize/", views.AuthorizationView.as_view(), name="authorize"),
+
     # Applications management views
     path("applications/", views.ApplicationList.as_view(), name="list"),
     path("applications/register/", views.ApplicationRegistration.as_view(), name="register"),

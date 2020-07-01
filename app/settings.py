@@ -7,11 +7,10 @@ DEBUG = not env.get('DEBUG') == 'True'
 DJANGO_WEB_HOST = env.get('DJANGO_WEB_HOST', 'localhost')
 ALLOWED_HOSTS = [DJANGO_WEB_HOST, 'localhost', '.herokuapp.com', '127.0.0.1']
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-SECRET_KEY = env.get('DJANGO_SECRET_KEY')
+SECRET_KEY = env.get('DJANGO_SECRET_KEY', 'secret')
 SITE_ID = 1
 
 # INSTALLED APPLICATIONS
-
 DEFAULT_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,7 +64,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        "DIRS": [os.path.join(BASE_DIR, "templates")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,7 +131,7 @@ USE_L10N = True
 USE_TZ = True
 
 # STATIC
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT = os.path.join(BASE_DIR, '../../static')
 STATIC_URL = '/static/'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -189,8 +188,9 @@ ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 ACCOUNT_LOGOUT_REDIRECT_URL = '/accounts/login/'
 ACCOUNT_SIGNUP_EMAIL_ENTER_TWICE = True
 ACCOUNT_USERNAME_MIN_LENGTH = 3
-LOGIN_REDIRECT_URL = '/home'
+ACCOUNT_ADAPTER = 'core.adapters.CustomSocialAccountAdapter'
 
+SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [

@@ -5,24 +5,32 @@ logging = {
     'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
-            'format': '%(asctime)s | %(levelname)s | %(module)s | %(message)s'
-        },
-        'simple': {
-            'format': '%(asctime)s | %(levelname)s | %(message)s'
+            'format': '%(asctime)s | %(levelname)s | %(module)s | %(name)s: %(message)s'
         },
     },
+
+    "filters": {
+        "require_debug_false": {"()": "django.utils.log.RequireDebugFalse"},
+    },
+
     'handlers': {
         'console': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',
         },
 
         'file': {
-            'level': 'INFO',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
             'filename': 'info.log',
-            'formatter': 'verbose'
+            'formatter': 'verbose',
+        },
+
+        "mail_admins": {
+            "level": "ERROR",
+            "class": "django.utils.log.AdminEmailHandler",
+            "filters": ["require_debug_false"],
         },
     },
     'loggers': {

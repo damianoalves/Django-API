@@ -1,0 +1,755 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/auth/user/:
+    get:
+      operationId: RetrieveUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  pk:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    readOnly: true
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                required:
+                - username
+          description: ''
+    put:
+      operationId: UpdateUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                first_name:
+                  type: string
+                  maxLength: 30
+                last_name:
+                  type: string
+                  maxLength: 150
+              required:
+              - username
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+          '*/*':
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  pk:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    readOnly: true
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                required:
+                - username
+          description: ''
+    patch:
+      operationId: PartialUpdateUserDetails
+      description: 'Reads and updates UserModel fields
+
+        Accepts GET, PUT, PATCH methods.
+
+
+        Default accepted fields: username, first_name, last_name
+
+        Default display fields: pk, username, email, first_name, last_name
+
+        Read-only fields: pk, email
+
+
+        Returns UserModel fields.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                first_name:
+                  type: string
+                  maxLength: 30
+                last_name:
+                  type: string
+                  maxLength: 150
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+          '*/*':
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  pk:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                  email:
+                    type: string
+                    format: email
+                    readOnly: true
+                  first_name:
+                    type: string
+                    maxLength: 30
+                  last_name:
+                    type: string
+                    maxLength: 150
+                required:
+                - username
+          description: ''
+  /api/users/addresses/:
+    get:
+      operationId: listAddress
+      description: ''
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  count:
+                    type: integer
+                    example: 123
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+                  results:
+                    type: array
+                    items:
+                      properties:
+                        uuid:
+                          type: string
+                          format: uuid
+                          readOnly: true
+                        user:
+                          type: string
+                        zip_code:
+                          type: string
+                          maxLength: 9
+                        street:
+                          type: string
+                          maxLength: 100
+                        number:
+                          type: string
+                          maxLength: 5
+                        complement:
+                          type: string
+                          nullable: true
+                          maxLength: 200
+                        neighborhood:
+                          type: string
+                          maxLength: 100
+                        city:
+                          type: string
+                          maxLength: 100
+                        state:
+                          type: string
+                          maxLength: 100
+                        country:
+                          type: string
+                          maxLength: 50
+                      required:
+                      - user
+                      - zip_code
+                      - street
+                      - number
+                      - neighborhood
+                      - city
+                      - state
+                      - country
+          description: ''
+    post:
+      operationId: createAddress
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                user:
+                  type: string
+                zip_code:
+                  type: string
+                  maxLength: 9
+                street:
+                  type: string
+                  maxLength: 100
+                number:
+                  type: string
+                  maxLength: 5
+                complement:
+                  type: string
+                  nullable: true
+                  maxLength: 200
+                neighborhood:
+                  type: string
+                  maxLength: 100
+                city:
+                  type: string
+                  maxLength: 100
+                state:
+                  type: string
+                  maxLength: 100
+                country:
+                  type: string
+                  maxLength: 50
+                created_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+                updated_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+              required:
+              - user
+              - zip_code
+              - street
+              - number
+              - neighborhood
+              - city
+              - state
+              - country
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+          '*/*':
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  user:
+                    type: string
+                  zip_code:
+                    type: string
+                    maxLength: 9
+                  street:
+                    type: string
+                    maxLength: 100
+                  number:
+                    type: string
+                    maxLength: 5
+                  complement:
+                    type: string
+                    nullable: true
+                    maxLength: 200
+                  neighborhood:
+                    type: string
+                    maxLength: 100
+                  city:
+                    type: string
+                    maxLength: 100
+                  state:
+                    type: string
+                    maxLength: 100
+                  country:
+                    type: string
+                    maxLength: 50
+                required:
+                - user
+                - zip_code
+                - street
+                - number
+                - neighborhood
+                - city
+                - state
+                - country
+          description: ''
+  /api/users/addresses/{id}/:
+    get:
+      operationId: retrieveAddress
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this Address.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  user:
+                    type: string
+                  zip_code:
+                    type: string
+                    maxLength: 9
+                  street:
+                    type: string
+                    maxLength: 100
+                  number:
+                    type: string
+                    maxLength: 5
+                  complement:
+                    type: string
+                    nullable: true
+                    maxLength: 200
+                  neighborhood:
+                    type: string
+                    maxLength: 100
+                  city:
+                    type: string
+                    maxLength: 100
+                  state:
+                    type: string
+                    maxLength: 100
+                  country:
+                    type: string
+                    maxLength: 50
+                required:
+                - user
+                - zip_code
+                - street
+                - number
+                - neighborhood
+                - city
+                - state
+                - country
+          description: ''
+    put:
+      operationId: updateAddress
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this Address.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id004
+              properties:
+                user:
+                  type: string
+                zip_code:
+                  type: string
+                  maxLength: 9
+                street:
+                  type: string
+                  maxLength: 100
+                number:
+                  type: string
+                  maxLength: 5
+                complement:
+                  type: string
+                  nullable: true
+                  maxLength: 200
+                neighborhood:
+                  type: string
+                  maxLength: 100
+                city:
+                  type: string
+                  maxLength: 100
+                state:
+                  type: string
+                  maxLength: 100
+                country:
+                  type: string
+                  maxLength: 50
+                created_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+                updated_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+              required:
+              - user
+              - zip_code
+              - street
+              - number
+              - neighborhood
+              - city
+              - state
+              - country
+          application/x-www-form-urlencoded:
+            schema: *id004
+          multipart/form-data:
+            schema: *id004
+          '*/*':
+            schema: *id004
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  user:
+                    type: string
+                  zip_code:
+                    type: string
+                    maxLength: 9
+                  street:
+                    type: string
+                    maxLength: 100
+                  number:
+                    type: string
+                    maxLength: 5
+                  complement:
+                    type: string
+                    nullable: true
+                    maxLength: 200
+                  neighborhood:
+                    type: string
+                    maxLength: 100
+                  city:
+                    type: string
+                    maxLength: 100
+                  state:
+                    type: string
+                    maxLength: 100
+                  country:
+                    type: string
+                    maxLength: 50
+                required:
+                - user
+                - zip_code
+                - street
+                - number
+                - neighborhood
+                - city
+                - state
+                - country
+          description: ''
+    patch:
+      operationId: partial_updateAddress
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this Address.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id005
+              properties:
+                user:
+                  type: string
+                zip_code:
+                  type: string
+                  maxLength: 9
+                street:
+                  type: string
+                  maxLength: 100
+                number:
+                  type: string
+                  maxLength: 5
+                complement:
+                  type: string
+                  nullable: true
+                  maxLength: 200
+                neighborhood:
+                  type: string
+                  maxLength: 100
+                city:
+                  type: string
+                  maxLength: 100
+                state:
+                  type: string
+                  maxLength: 100
+                country:
+                  type: string
+                  maxLength: 50
+                created_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+                updated_by:
+                  type: integer
+                  writeOnly: true
+                  nullable: true
+          application/x-www-form-urlencoded:
+            schema: *id005
+          multipart/form-data:
+            schema: *id005
+          '*/*':
+            schema: *id005
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  uuid:
+                    type: string
+                    format: uuid
+                    readOnly: true
+                  user:
+                    type: string
+                  zip_code:
+                    type: string
+                    maxLength: 9
+                  street:
+                    type: string
+                    maxLength: 100
+                  number:
+                    type: string
+                    maxLength: 5
+                  complement:
+                    type: string
+                    nullable: true
+                    maxLength: 200
+                  neighborhood:
+                    type: string
+                    maxLength: 100
+                  city:
+                    type: string
+                    maxLength: 100
+                  state:
+                    type: string
+                    maxLength: 100
+                  country:
+                    type: string
+                    maxLength: 50
+                required:
+                - user
+                - zip_code
+                - street
+                - number
+                - neighborhood
+                - city
+                - state
+                - country
+          description: ''
+    delete:
+      operationId: destroyAddress
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this Address.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/auth/register/:
+    post:
+      operationId: CreateRegister
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id006
+              properties:
+                username:
+                  type: string
+                  maxLength: 150
+                  minLength: 3
+                email:
+                  type: string
+                  format: email
+                password1:
+                  type: string
+                  writeOnly: true
+                password2:
+                  type: string
+                  writeOnly: true
+              required:
+              - username
+              - email
+              - password1
+              - password2
+          application/x-www-form-urlencoded:
+            schema: *id006
+          multipart/form-data:
+            schema: *id006
+          '*/*':
+            schema: *id006
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  username:
+                    type: string
+                    maxLength: 150
+                    minLength: 3
+                  email:
+                    type: string
+                    format: email
+                required:
+                - username
+                - email
+          description: ''
+  /api/auth/password/change/:
+    post:
+      operationId: CreatePasswordChange
+      description: 'Calls Django Auth SetPasswordForm save method.
+
+
+        Accepts the following POST parameters: new_password1, new_password2
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id007
+              properties:
+                old_password:
+                  type: string
+                  maxLength: 128
+                new_password1:
+                  type: string
+                  maxLength: 128
+                new_password2:
+                  type: string
+                  maxLength: 128
+              required:
+              - old_password
+              - new_password1
+              - new_password2
+          application/x-www-form-urlencoded:
+            schema: *id007
+          multipart/form-data:
+            schema: *id007
+          '*/*':
+            schema: *id007
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  old_password:
+                    type: string
+                    maxLength: 128
+                  new_password1:
+                    type: string
+                    maxLength: 128
+                  new_password2:
+                    type: string
+                    maxLength: 128
+                required:
+                - old_password
+                - new_password1
+                - new_password2
+          description: ''

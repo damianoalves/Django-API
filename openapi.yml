@@ -195,6 +195,18 @@ paths:
         description: A page number within the paginated result set.
         schema:
           type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
       responses:
         '200':
           content:
@@ -219,8 +231,6 @@ paths:
                           type: string
                           format: uuid
                           readOnly: true
-                        user:
-                          type: string
                         zip_code:
                           type: string
                           maxLength: 9
@@ -247,7 +257,6 @@ paths:
                           type: string
                           maxLength: 50
                       required:
-                      - user
                       - zip_code
                       - street
                       - number
@@ -265,8 +274,6 @@ paths:
           application/json:
             schema: &id003
               properties:
-                user:
-                  type: string
                 zip_code:
                   type: string
                   maxLength: 9
@@ -292,6 +299,9 @@ paths:
                 country:
                   type: string
                   maxLength: 50
+                user:
+                  type: integer
+                  writeOnly: true
                 created_by:
                   type: integer
                   writeOnly: true
@@ -301,7 +311,6 @@ paths:
                   writeOnly: true
                   nullable: true
               required:
-              - user
               - zip_code
               - street
               - number
@@ -309,6 +318,7 @@ paths:
               - city
               - state
               - country
+              - user
           application/x-www-form-urlencoded:
             schema: *id003
           multipart/form-data:
@@ -325,8 +335,6 @@ paths:
                     type: string
                     format: uuid
                     readOnly: true
-                  user:
-                    type: string
                   zip_code:
                     type: string
                     maxLength: 9
@@ -353,7 +361,6 @@ paths:
                     type: string
                     maxLength: 50
                 required:
-                - user
                 - zip_code
                 - street
                 - number
@@ -362,15 +369,27 @@ paths:
                 - state
                 - country
           description: ''
-  /api/users/addresses/{id}/:
+  /api/users/addresses/{uuid}/:
     get:
       operationId: retrieveAddress
       description: ''
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: A unique integer value identifying this Address.
+        description: ''
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
         schema:
           type: string
       responses:
@@ -383,8 +402,6 @@ paths:
                     type: string
                     format: uuid
                     readOnly: true
-                  user:
-                    type: string
                   zip_code:
                     type: string
                     maxLength: 9
@@ -411,7 +428,6 @@ paths:
                     type: string
                     maxLength: 50
                 required:
-                - user
                 - zip_code
                 - street
                 - number
@@ -424,10 +440,22 @@ paths:
       operationId: updateAddress
       description: ''
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: A unique integer value identifying this Address.
+        description: ''
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
         schema:
           type: string
       requestBody:
@@ -435,8 +463,6 @@ paths:
           application/json:
             schema: &id004
               properties:
-                user:
-                  type: string
                 zip_code:
                   type: string
                   maxLength: 9
@@ -462,6 +488,9 @@ paths:
                 country:
                   type: string
                   maxLength: 50
+                user:
+                  type: integer
+                  writeOnly: true
                 created_by:
                   type: integer
                   writeOnly: true
@@ -471,7 +500,6 @@ paths:
                   writeOnly: true
                   nullable: true
               required:
-              - user
               - zip_code
               - street
               - number
@@ -479,6 +507,7 @@ paths:
               - city
               - state
               - country
+              - user
           application/x-www-form-urlencoded:
             schema: *id004
           multipart/form-data:
@@ -495,8 +524,6 @@ paths:
                     type: string
                     format: uuid
                     readOnly: true
-                  user:
-                    type: string
                   zip_code:
                     type: string
                     maxLength: 9
@@ -523,7 +550,6 @@ paths:
                     type: string
                     maxLength: 50
                 required:
-                - user
                 - zip_code
                 - street
                 - number
@@ -536,10 +562,22 @@ paths:
       operationId: partial_updateAddress
       description: ''
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: A unique integer value identifying this Address.
+        description: ''
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
         schema:
           type: string
       requestBody:
@@ -547,8 +585,6 @@ paths:
           application/json:
             schema: &id005
               properties:
-                user:
-                  type: string
                 zip_code:
                   type: string
                   maxLength: 9
@@ -574,6 +610,9 @@ paths:
                 country:
                   type: string
                   maxLength: 50
+                user:
+                  type: integer
+                  writeOnly: true
                 created_by:
                   type: integer
                   writeOnly: true
@@ -598,8 +637,6 @@ paths:
                     type: string
                     format: uuid
                     readOnly: true
-                  user:
-                    type: string
                   zip_code:
                     type: string
                     maxLength: 9
@@ -626,7 +663,6 @@ paths:
                     type: string
                     maxLength: 50
                 required:
-                - user
                 - zip_code
                 - street
                 - number
@@ -639,10 +675,22 @@ paths:
       operationId: destroyAddress
       description: ''
       parameters:
-      - name: id
+      - name: uuid
         in: path
         required: true
-        description: A unique integer value identifying this Address.
+        description: ''
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
         schema:
           type: string
       responses:

@@ -2,27 +2,23 @@ import uuid as uuid
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import UUIDField
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from guardian.shortcuts import assign_perm
 from model_utils.managers import SoftDeletableManager
 from model_utils.models import SoftDeletableModel, UUIDModel
 
-from app import settings
-
 
 class BaseModel(SoftDeletableModel):
-    uuid = UUIDField(
-        default=uuid.uuid4,
-        editable=False,
-        unique=True
-    )
-
     user = models.ForeignKey(
         User,
         verbose_name="User",
         on_delete=models.CASCADE,
-        default=1
+        unique=False
+    )
+
+    uuid = UUIDField(
+        default=uuid.uuid4,
+        editable=False,
+        unique=True
     )
 
     created_at = models.DateTimeField(
@@ -78,16 +74,6 @@ class BaseModel(SoftDeletableModel):
 
         return self.pk
 
-    @receiver(post_save)
-    def user_post_save(self, **kwargs):
-
-        instance, created = kwargs["instance"], kwargs["created"]
-        if created and instance.user.username != settings.ANONYMOUS_USER_NAME:
-            assign_perm("create_user", user, user)
-            assign_perm("change_profile", user, profile)
-            assign_perm("create_user", user, user)
-            assign_perm("create_user", user, user)
-
     @classmethod
     def list(cls, *args, **kwargs):
         return cls.objects.filter(*args, **kwargs)
@@ -120,3 +106,13 @@ class BaseModel(SoftDeletableModel):
 
     class Meta:
         abstract = True
+
+
+def user_post_save(sender, instance, **kwargs):
+    created = kwargs["created"]
+    if created and hasattr(instance, 'user'):
+        name = instance.__class__.__name__.lower()
+        assign_perm('change_' + name, instance.user, instance)
+        assign_perm('add_' + name, instance.user, instance)
+        assign_perm('view_' + name, instance.user, instance)
+        assign_perm('delete_' + name, instance.user, instance)
